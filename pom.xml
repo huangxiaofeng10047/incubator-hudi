@@ -64,7 +64,18 @@
     <module>packaging/hudi-cli-bundle</module>
     <module>hudi-tests-common</module>
   </modules>
-
+   <distributionManagement>
+   <repository>
+     <id>maven-releases</id>
+     <name>internal releases</name>
+     <url>http://10.7.20.39:8081/repository/maven-releases/</url>
+   </repository>
+   <snapshotRepository>
+     <id>maven-snapshots</id>
+     <name>internal snapshot</name>
+     <url>http://10.7.20.39:8081/repository/maven-snapshots/</url>
+   </snapshotRepository>
+ </distributionManagement>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
