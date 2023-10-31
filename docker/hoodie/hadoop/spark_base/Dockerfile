@@ -15,16 +15,17 @@
 #  See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG HADOOP_VERSION=2.8.4 
-ARG HIVE_VERSION=2.3.3
-FROM apachehudi/hudi-hadoop_${HADOOP_VERSION}-hive_${HIVE_VERSION}
+
+ARG HADOOP_VERSION=3.2.1
+ARG HIVE_VERSION=3.1.3
+FROM apachehudi/hudi-hadoop_${HADOOP_VERSION}-hive_${HIVE_VERSION}:1.0.0-SNAPSHOT
 
 ENV ENABLE_INIT_DAEMON true
 ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
 ENV INIT_DAEMON_STEP spark_master_init
 
-ARG SPARK_VERSION=2.4.4
-ARG SPARK_HADOOP_VERSION=2.7
+ARG SPARK_VERSION=3.4.1
+ARG SPARK_HADOOP_VERSION=3
 
 ENV SPARK_VERSION ${SPARK_VERSION}
 ENV HADOOP_VERSION ${SPARK_HADOOP_VERSION}

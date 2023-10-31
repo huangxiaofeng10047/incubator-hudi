@@ -49,6 +49,9 @@ To build a single image target, you can run
 mvn clean pre-integration-test -DskipTests -Ddocker.compose.skip=true -Ddocker.build.skip=false -pl :<image_target> -am
 # For example, to build hudi-hadoop-trinobase-docker
 mvn clean pre-integration-test -DskipTests -Ddocker.compose.skip=true -Ddocker.build.skip=false -pl :hudi-hadoop-trinobase-docker -am
+
+mvn clean pre-integration-test -DskipTests -Ddocker.compose.skip=true -Ddocker.build.skip=false -pl :hudi-hadoop-base-docker -am
+
 ```
 
 Alternatively, you can use `docker` cli directly under `hoodie/hadoop` to build images in a faster way. If you use this
