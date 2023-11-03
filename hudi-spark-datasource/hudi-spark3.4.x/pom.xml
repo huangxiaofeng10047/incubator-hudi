@@ -172,7 +172,11 @@
   </build>
 
   <dependencies>
-
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>9.4.48.v20220622</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-sql_${scala.binary.version}</artifactId>
@@ -263,6 +267,24 @@
       <artifactId>hudi-tests-common</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>jetty-util</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-server</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-servlet</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-webapp</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -288,6 +310,28 @@
       <artifactId>hudi-common</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
+      <exclusions>
+        <exclusion>
+          <artifactId>jetty-util</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-server</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-servlet</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-webapp</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-util-ajax</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+      </exclusions>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -333,6 +377,14 @@
         <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-util</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-server</artifactId>
+          <groupId>org.eclipse.jetty</groupId>
         </exclusion>
       </exclusions>
     </dependency>

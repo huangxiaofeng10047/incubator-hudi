@@ -271,6 +271,7 @@
       <artifactId>hudi-hive-sync</artifactId>
       <version>${project.version}</version>
       <exclusions>
+
         <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
@@ -302,6 +303,18 @@
           <groupId>org.apache.hbase</groupId>
           <artifactId>*</artifactId>
         </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.pentaho</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -310,6 +323,7 @@
       <artifactId>hive-service-rpc</artifactId>
       <version>${hive.version}</version>
       <scope>${utilities.bundle.hive.scope}</scope>
+
     </dependency>
 
     <dependency>
@@ -317,6 +331,20 @@
       <artifactId>hive-jdbc</artifactId>
       <version>${hive.version}</version>
       <scope>${utilities.bundle.hive.scope}</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.pentaho</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -325,6 +353,18 @@
       <version>${hive.version}</version>
       <scope>${utilities.bundle.hive.scope}</scope>
       <exclusions>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.pentaho</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.apache.hbase</groupId>
           <artifactId>*</artifactId>
@@ -337,6 +377,16 @@
       <artifactId>hive-common</artifactId>
       <version>${hive.version}</version>
       <scope>${utilities.bundle.hive.scope}</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty.orbit</groupId>
+          <artifactId>javax.servlet</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -363,6 +413,16 @@
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-recipes</artifactId>
       <version>${zk-curator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-runner</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-rewrite</artifactId>
+      <version>${jetty.version}</version>
     </dependency>
   </dependencies>
 

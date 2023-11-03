@@ -69,9 +69,13 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 #//$ rm /opt/shared/apache-hive-3.1.2-bin/lib/guava-19.0.jar
 #  $ cp /opt/shared/hadoop-3.2.1/share/hadoop/hdfs/lib/guava-27.0-jre.jar /opt/shared/apache-hive-3.1.2-bin/lib/
 RUN rm $HIVE_HOME/lib/guava-19.0.jar && cp $HADOOP_HOME/share/hadoop/hdfs/lib/guava-27.0-jre.jar $HIVE_HOME/lib/
+RUN rm $HIVE_HOME/lib/hive-exec-3.1.3.jar &&  \
+    wget -nv -O $HIVE_HOME/lib/hive-exec-3.1.3.jar http://10.7.20.31:60000/hive-exec-3.1.3.jar
 ENV PATH $HIVE_HOME/bin/:$PATH
 # NOTE: This is the only battle-proven method to inject jars into Hive CLI
 ENV AUX_CLASSPATH=file://${HUDI_HADOOP_BUNDLE}
+EXPOSE 10000/tcp
+EXPOSE 10002/tcp
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD startup.sh

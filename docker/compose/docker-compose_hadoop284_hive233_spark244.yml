@@ -45,7 +45,7 @@ services:
     env_file:
       - ./hadoop.env
     ports:
-      - "50075:9864"
+      - "9864:9864"
       - "50010:50010"
       # JVM debugging port (will be mapped to a random port on host)
       - "5005"
