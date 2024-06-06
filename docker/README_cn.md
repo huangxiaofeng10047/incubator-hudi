@@ -671,40 +671,42 @@ $SPARK_INSTALL/bin/spark-shell \
   --num-executors 1
 
 
-22/07/25 07:46:00 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+23/11/03 01:14:38 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Spark context Web UI available at http://adhoc-1:4040
-Spark context available as 'sc' (master = local[2], app id = local-1658735167793).
+Spark context available as 'sc' (master = local[2], app id = local-1698974085962).
 Spark session available as 'spark'.
 Welcome to
       ____              __
      / __/__  ___ _____/ /__
     _\ \/ _ \/ _ `/ __/  '_/
-   /___/ .__/\_,_/_/ /_/\_\   version 2.4.4
+   /___/ .__/\_,_/_/ /_/\_\   version 3.4.1
       /_/
-         
-Using Scala version 2.11.12 (OpenJDK 64-Bit Server VM, Java 1.8.0_212)
+
+Using Scala version 2.12.17 (OpenJDK 64-Bit Server VM, Java 1.8.0_212)
 Type in expressions to have them evaluated.
 Type :help for more information.
 
 
 
 scala> spark.sql("show tables").show(100, false)
-+--------+------------------+-----------+
-|database|tableName         |isTemporary|
-+--------+------------------+-----------+
-|default |stock_ticks_cow   |false      |
-|default |stock_ticks_mor_ro|false      |
-|default |stock_ticks_mor_rt|false      |
-+--------+------------------+-----------+
+23/11/03 01:15:15 WARN HiveConf: HiveConf of name hive.metastore.event.db.notification.api.auth does not exist
++---------+------------------+-----------+
+|namespace|tableName         |isTemporary|
++---------+------------------+-----------+
+|default  |stock_ticks_cow   |false      |
+|default  |stock_ticks_mor_ro|false      |
+|default  |stock_ticks_mor_rt|false      |
++---------+------------------+-----------+
+
 
 # Copy-On-Write Table
 
 ## Run max timestamp query against COW table
 
 scala> spark.sql("select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG'").show(100, false)
-+------+-------------------+                                                    
+23/11/03 01:15:39 WARN DFSPropertiesConfiguration: Cannot find HUDI_CONF_DIR, please set it as the dir of hudi-defaults.conf
+23/11/03 01:15:39 WARN DFSPropertiesConfiguration: Properties file file:/etc/hudi/conf/hudi-defaults.conf not found. Ignoring to load props file
++------+-------------------+
 |symbol|max(ts)            |
 +------+-------------------+
 |GOOG  |2018-08-31 10:29:00|
@@ -716,9 +718,10 @@ scala> spark.sql("select `_hoodie_commit_time`, symbol, ts, volume, open, close 
 +-------------------+------+-------------------+------+---------+--------+
 |_hoodie_commit_time|symbol|ts                 |volume|open     |close   |
 +-------------------+------+-------------------+------+---------+--------+
-|20220808034650860  |GOOG  |2018-08-31 09:59:00|6330  |1230.5   |1230.02 |
-|20220808034650860  |GOOG  |2018-08-31 10:29:00|3391  |1230.1899|1230.085|
+|20231102122758903  |GOOG  |2018-08-31 09:59:00|6330  |1230.5   |1230.02 |
+|20231102122758903  |GOOG  |2018-08-31 10:29:00|3391  |1230.1899|1230.085|
 +-------------------+------+-------------------+------+---------+--------+
+
 
 # Merge-On-Read Queries:
 ==========================
@@ -775,73 +778,80 @@ docker exec -it presto-worker-1 presto --server presto-coordinator-1:8090
 [root@biodata bin]# docker exec -it presto-worker-1 presto --server presto-coordinator-1:8090
 
 presto> show catalogs;
-  Catalog  
+  Catalog
 -----------
- hive      
- jmx       
- localfile 
- system    
+ hive
+ jmx
+ localfile
+ system
 (4 rows)
 
-Query 20220808_035654_00000_hq6qp, FINISHED, 1 node
+Query 20231103_011713_00000_hbfgy, FINISHED, 1 node
 Splits: 19 total, 19 done (100.00%)
-0:02 [0 rows, 0B] [0 rows/s, 0B/s]
+0:04 [0 rows, 0B] [0 rows/s, 0B/s]
+
 
 presto>  use hive.default;
 USE
 presto:default>  show tables;
-       Table        
+       Table
 --------------------
- stock_ticks_cow    
- stock_ticks_mor_ro 
- stock_ticks_mor_rt 
+ stock_ticks_cow
+ stock_ticks_mor_ro
+ stock_ticks_mor_rt
 (3 rows)
 
-Query 20220808_035711_00002_hq6qp, FINISHED, 2 nodes
+Query 20231103_011755_00002_hbfgy, FINISHED, 2 nodes
 Splits: 19 total, 19 done (100.00%)
-0:01 [3 rows, 102B] [2 rows/s, 76B/s]
+0:02 [3 rows, 102B] [1 rows/s, 60B/s]
+
 
 presto:default> select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG';
- symbol |        _col1        
+ symbol |        _col1
 --------+---------------------
- GOOG   | 2018-08-31 10:29:00 
+ GOOG   | 2018-08-31 10:29:00
 (1 row)
 
-Query 20220808_035719_00003_hq6qp, FINISHED, 1 node
+Query 20231103_011815_00003_hbfgy, FINISHED, 1 node
 Splits: 49 total, 49 done (100.00%)
-0:04 [197 rows, 426KB] [45 rows/s, 97.8KB/s]
+0:08 [197 rows, 426KB] [25 rows/s, 56KB/s]
+
+
 
 presto:default>  select "_hoodie_commit_time", symbol, ts, volume, open, close from stock_ticks_cow where symbol = 'GOOG';
- _hoodie_commit_time | symbol |         ts          | volume |   open    |  close   
+ _hoodie_commit_time | symbol |         ts          | volume |   open    |  close
 ---------------------+--------+---------------------+--------+-----------+----------
- 20220808034650860   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02 
- 20220808034650860   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085 
+ 20231102122758903   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02
+ 20231102122758903   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085
 (2 rows)
 
-Query 20220808_035735_00004_hq6qp, FINISHED, 1 node
+Query 20231103_011836_00004_hbfgy, FINISHED, 1 node
 Splits: 17 total, 17 done (100.00%)
-0:01 [197 rows, 429KB] [275 rows/s, 600KB/s]
+404ms [197 rows, 429KB] [487 rows/s, 1.04MB/s]
+
 
 presto:default>  select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG';
- symbol |        _col1        
+ symbol |        _col1
 --------+---------------------
- GOOG   | 2018-08-31 10:29:00 
+ GOOG   | 2018-08-31 10:29:00
 (1 row)
 
-Query 20220808_035742_00005_hq6qp, FINISHED, 1 node
+Query 20231103_011901_00005_hbfgy, FINISHED, 1 node
 Splits: 49 total, 49 done (100.00%)
-0:01 [197 rows, 426KB] [293 rows/s, 636KB/s]
+324ms [197 rows, 426KB] [608 rows/s, 1.29MB/s]
+
 
 presto:default> select "_hoodie_commit_time", symbol, ts, volume, open, close  from stock_ticks_mor_ro where  symbol = 'GOOG';
- _hoodie_commit_time | symbol |         ts          | volume |   open    |  close   
+ _hoodie_commit_time | symbol |         ts          | volume |   open    |  close
 ---------------------+--------+---------------------+--------+-----------+----------
- 20220808034809720   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02 
- 20220808034809720   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085 
+ 20231102123006819   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02
+ 20231102123006819   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085
 (2 rows)
 
-Query 20220808_035747_00006_hq6qp, FINISHED, 1 node
+Query 20231103_011919_00006_hbfgy, FINISHED, 1 node
 Splits: 17 total, 17 done (100.00%)
-0:01 [197 rows, 429KB] [343 rows/s, 748KB/s]
+255ms [197 rows, 429KB] [773 rows/s, 1.65MB/s]
+
 ```
 
 #### [](http://hphblog.cn/2022/08/06/apache-hudi-kuai-su-ti-yan/#%E4%BD%BF%E7%94%A8Trino%E6%9F%A5%E8%AF%A2 "使用Trino查询")使用Trino查询
@@ -853,60 +863,64 @@ shell
 ```
 docker exec -it adhoc-2 trino --server trino-coordinator-1:8091
 trino>  show catalogs;
- Catalog 
+ Catalog
 ---------
- hive    
- system  
+ hive
+ system
 (2 rows)
 
-Query 20220808_035852_00000_vxj2r, FINISHED, 1 node
-Splits: 7 total, 7 done (100.00%)
-1.83 [0 rows, 0B] [0 rows/s, 0B/s]
+Query 20231103_012301_00000_yy9yn, FINISHED, 1 node
+Splits: 11 total, 11 done (100.00%)
+3.51 [0 rows, 0B] [0 rows/s, 0B/s]
+
 
 trino>  use hive.default;
 USE
 trino:default> show tables;
-       Table        
+       Table
 --------------------
- stock_ticks_cow    
- stock_ticks_mor_ro 
- stock_ticks_mor_rt 
+ stock_ticks_cow
+ stock_ticks_mor_ro
+ stock_ticks_mor_rt
 (3 rows)
 
-Query 20220808_035903_00003_vxj2r, FINISHED, 2 nodes
-Splits: 7 total, 7 done (100.00%)
-1.91 [3 rows, 102B] [1 rows/s, 53B/s]
+Query 20231103_012325_00004_yy9yn, FINISHED, 2 nodes
+Splits: 11 total, 11 done (100.00%)
+0.91 [3 rows, 102B] [3 rows/s, 112B/s]
 
 trino:default>  select symbol, max(ts) from stock_ticks_cow group by symbol HAVING symbol = 'GOOG';
- symbol |        _col1        
+  symbol |        _col1
 --------+---------------------
- GOOG   | 2018-08-31 10:29:00 
+ GOOG   | 2018-08-31 10:29:00
 (1 row)
 
-Query 20220808_035910_00005_vxj2r, FINISHED, 1 node
-Splits: 13 total, 13 done (100.00%)
-4.77 [197 rows, 442KB] [41 rows/s, 92.7KB/s]
+Query 20231103_012344_00005_yy9yn, FINISHED, 1 node
+Splits: 25 total, 25 done (100.00%)
+7.06 [197 rows, 442KB] [27 rows/s, 62.6KB/s]
+
 
 trino:default> select "_hoodie_commit_time", symbol, ts, volume, open, close from stock_ticks_cow where symbol = 'GOOG';
- _hoodie_commit_time | symbol |         ts          | volume |   open    |  close   
+ _hoodie_commit_time | symbol |         ts          | volume |   open    |  close
 ---------------------+--------+---------------------+--------+-----------+----------
- 20220808034650860   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02 
- 20220808034650860   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085 
+ 20231102122758903   | GOOG   | 2018-08-31 09:59:00 |   6330 |    1230.5 |  1230.02
+ 20231102122758903   | GOOG   | 2018-08-31 10:29:00 |   3391 | 1230.1899 | 1230.085
 (2 rows)
 
-Query 20220808_035916_00006_vxj2r, FINISHED, 1 node
-Splits: 5 total, 5 done (100.00%)
-0.67 [197 rows, 450KB] [292 rows/s, 668KB/s]
+Query 20231103_012404_00006_yy9yn, FINISHED, 1 node
+Splits: 9 total, 9 done (100.00%)
+0.27 [197 rows, 450KB] [729 rows/s, 1.63MB/s]
+
 
 trino:default> select symbol, max(ts) from stock_ticks_mor_ro group by symbol HAVING symbol = 'GOOG';
- symbol |        _col1        
+ symbol |        _col1
 --------+---------------------
- GOOG   | 2018-08-31 10:29:00 
+ GOOG   | 2018-08-31 10:29:00
 (1 row)
 
-Query 20220808_035923_00007_vxj2r, FINISHED, 1 node
-Splits: 13 total, 13 done (100.00%)
-0.60 [197 rows, 442KB] [328 rows/s, 737KB/s]
+Query 20231103_012419_00007_yy9yn, FINISHED, 1 node
+Splits: 25 total, 25 done (100.00%)
+0.40 [197 rows, 442KB] [498 rows/s, 1.09MB/s]
+
 
 trino:default> select "_hoodie_commit_time", symbol, ts, volume, open, close  from stock_ticks_mor_ro where  symbol = 'GOOG';
  _hoodie_commit_time | symbol |         ts          | volume |   open    |  close   
