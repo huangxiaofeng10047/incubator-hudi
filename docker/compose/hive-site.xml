@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?><!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+--><configuration>
+  <!-- WARNING!!! This file is auto generated for documentation purposes ONLY! -->
+  <!-- WARNING!!! Any changes you make to this file will be ignored by Hive.   -->
+  <!-- WARNING!!! You must make your changes in hive-site.xml instead.         -->
+  <!-- Hive Execution Parameters -->
+   <!-- jdbc连接的URL -->
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:postgresql://hive-metastore-postgresql/metastore</value>
+</property>
+
+  <!-- jdbc连接的Driver-->
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>org.postgresql.Driver</value>
+</property>
+
+    <!-- jdbc连接的username-->
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+  </property>
+
+  <!-- jdbc连接的password -->
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hive</value>
+  </property>
+  <!-- Hive默认在HDFS的工作目录 -->
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/user/hive/warehouse</value>
+  </property>
+  
+  <!-- Hive元数据存储版本的验证 -->
+  <property>
+    <name>hive.metastore.schema.verification</name>
+    <value>false</value>
+  </property>
+  <!-- 指定存储元数据要连接的地址 -->
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://hivemetastore:9083</value>
+  </property>
+  <!-- 指定hiveserver2连接的端口号 -->
+  <property>
+  <name>hive.server2.thrift.port</name>
+  <value>10000</value>
+  </property>
+  <!-- 指定hiveserver2连接的host -->
+  <property>
+    <name>hive.server2.thrift.bind.host</name>
+    <value>0.0.0.0</value>
+  </property>
+  <!-- 元数据存储授权 -->
+  <property>
+    <name>hive.metastore.event.db.notification.api.auth</name>
+    <value>false</value>
+  </property>
+</configuration>
